@@ -90,3 +90,4 @@ resource "azurerm_key_vault_secret" "admin_password" {
 #     version   = "latest"
 #   }
 # }
+# This is a test to trigger GitHub Actions
