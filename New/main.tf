@@ -16,6 +16,7 @@ provider "azurerm" {
   tenant_id       = var.tenant_id
 }
 
+
 data "azurerm_client_config" "current" {}
 
 data "azurerm_resource_group" "rg" {
