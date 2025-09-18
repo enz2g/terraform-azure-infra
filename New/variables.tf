@@ -9,3 +9,7 @@ variable "keyvault_sku" {
   description = "Key Vault SKU"
   default     = "standard"
 }
+
+variable "tfappid" {
+  description = "Terraform application ID"
+}

@@ -36,7 +36,17 @@ resource "azurerm_key_vault" "vault" {
   tenant_id                  = data.azurerm_client_config.current.tenant_id
   sku_name                   = var.keyvault_sku
   soft_delete_retention_days = 7
+  enable_rbac_authorization = true
 }
+
+resource "azurerm_role_assignment" "role_assignment"{
+principal_id = var.tfappid
+scope = azurerm_key_vault.vault.id
+role_definition_name = "Key Vault Administrator"
+depends_on = [ azurerm_key_vault.vault ]
+
+}
+
 
 resource "random_string" "admin_password" {
   length  = 13
@@ -53,7 +63,8 @@ resource "azurerm_key_vault_secret" "admin_password" {
 
   depends_on = [
     azurerm_key_vault.vault,
-    random_string.admin_password
+    random_string.admin_password,
+    azurerm_role_assignment.role_assignment
   ]
 }
 
