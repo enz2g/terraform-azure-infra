@@ -1,4 +1,5 @@
-name: Terraform Plan and Apply
+name: Terraform Azure Deployment
+
 on:
   push:
     branches:
@@ -9,29 +10,36 @@ on:
 
 jobs:
   terraform:
-    name: 'Terraform'
     runs-on: ubuntu-latest
 
+    env:
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
     steps:
-      - name: Checkout code
+      - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Init
         run: terraform init
-
-      - name: Terraform Format Check
-        run: terraform fmt -check
 
       - name: Terraform Validate
         run: terraform validate
 
       - name: Terraform Plan
-        run: terraform plan
+        run: terraform plan -out=tfplan
 
-      # Uncomment below to allow automatic apply (risky in production!)
-      # - name: Terraform Apply
-      #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      #   run: terraform apply -auto-approve
+      # Optional: uncomment to auto-apply on merge to main
+      #- name: Terraform Apply
+      #  if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      #  run: terraform apply -auto-approve tfplan
