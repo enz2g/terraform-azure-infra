@@ -1,4 +1,4 @@
-name: Terraform Azure Deployment
+name: Terraform CI/CD
 
 on:
   push:
@@ -11,7 +11,6 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
-
     env:
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
@@ -19,27 +18,20 @@ jobs:
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
     steps:
-      - name: Checkout repo
+      - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Init
         run: terraform init
+        working-directory: New
 
       - name: Terraform Validate
         run: terraform validate
+        working-directory: New
 
       - name: Terraform Plan
-        run: terraform plan -out=tfplan
-
-      # Optional: uncomment to auto-apply on merge to main
-      #- name: Terraform Apply
-      #  if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      #  run: terraform apply -auto-approve tfplan
+        run: terraform plan
+        working-directory: New
