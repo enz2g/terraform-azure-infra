@@ -62,6 +62,6 @@ resource "azurerm_key_vault_secret" "admin_password" {
 }
 
 # (Optional VM resources commented out here)
-# Triggering GitHub Actions test 2.0
+# Triggering GitHub Actions test 2.0.1
 
   
