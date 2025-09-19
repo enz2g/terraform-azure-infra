@@ -37,6 +37,25 @@ resource "azurerm_subnet" "mtc-subnet" {
   address_prefixes     = ["10.123.1.0/24"]
 }
 
+resource "azurerm_storage_account" "bradstorageacc01" {
+  name                     = "bradstorageacc01"
+  resource_group_name      = azurerm_resource_group.mtc-rg.name
+  location                 = azurerm_resource_group.mtc-rg.location
+  account_tier             = "Standard"
+  account_replication_type = "GRS"
+
+  tags = {
+    environment = "staging"
+  }
+}
+
+resource "azurerm_storage_container" "tfstate" {
+  name                  = "tfstate"
+  storage_account_name  = azurerm_storage_account.bradstorageacc01.name
+  container_access_type = "private"
+}
+
+
 # resource "azurerm_network_security_group" "mtc-sg" {
 #   name                = "mtc-sg"
 #   location            = azurerm_resource_group.mtc-rg.location
