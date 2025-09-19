@@ -56,6 +56,7 @@ resource "azurerm_storage_container" "tfstate" {
 }
 
 
+
 # resource "azurerm_network_security_group" "mtc-sg" {
 #   name                = "mtc-sg"
 #   location            = azurerm_resource_group.mtc-rg.location
