@@ -67,7 +67,23 @@ resource "azurerm_key_vault_secret" "admin_password" {
     azurerm_role_assignment.role_assignment
   ]
 }
+resource "azurerm_storage_account" "bradstorageacc01new" {
+  name                     = "bradstorageacc01new"
+  resource_group_name      = azurerm_resource_group.mtc-rg.name
+  location                 = azurerm_resource_group.mtc-rg.location
+  account_tier             = "Standard"
+  account_replication_type = "GRS"
 
+  tags = {
+    environment = "staging"
+  }
+}
+
+resource "azurerm_storage_container" "tfstate" {
+  name                  = "tfstate"
+  storage_account_name  = azurerm_storage_account.bradstorageacc01new.name
+  container_access_type = "private"
+}
 # (Optional VM resources commented out here)
 # Triggering GitHub Actions test 2.0.1
 
